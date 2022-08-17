@@ -11,11 +11,16 @@ const App = () => {
 
   const insertNew = (event) => {
     event.preventDefault()
-    const newObj = {
-      name: newName
+    if(persons.filter(person => person.name === newName).length === 0){
+      const newObj = {
+        name: newName
+      }
+      setPersons(persons.concat(newObj))
+      setNewName('')
+    }else{
+      alert(`${newName} is already added`)
     }
-    setPersons(persons.concat(newObj))
-    setNewName('')
+    
   }
 
   const handleChange = (event) => {

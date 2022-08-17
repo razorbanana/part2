@@ -1,6 +1,38 @@
 import React from "react"
 import { useState } from 'react'
 
+const Filter = ({filter, onChange}) => {
+  return (
+    <div>
+        filter: <input value = {filter} onChange={onChange}/>
+    </div>
+  )
+}
+
+const PersonForm = ({insertNew, newName, handleNameChange, newNumber, handleNumberChange}) => {
+  return (
+    <form  onSubmit={insertNew}>
+      <div>
+        name: <input value = {newName} onChange={handleNameChange}/>
+      </div>
+      <div>
+        number: <input value = {newNumber} onChange={handleNumberChange}/>
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
+const Persons = ({persons}) => {
+  return (
+    <>
+      {persons.map(person => <p key = {person.name}>{person.name}: {person.number}</p>)}
+    </>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456'},
@@ -51,23 +83,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter: <input value = {filter} onChange={handleFilterChange}/>
-      </div>
+      <Filter filter = {filter} onChange = {handleFilterChange}/>
       <h2>add a new</h2>
-      <form  onSubmit={insertNew}>
-        <div>
-          name: <input value = {newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value = {newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm insertNew ={insertNew} newName = {newName} handleNameChange = {handleNameChange} 
+      newNumber={newNumber} handleNumberChange = {handleNumberChange}/>
       <h2>Numbers</h2>
-      {personsToShow.map(person => <p key = {person.name}>{person.name}: {person.number}</p>)}
+      <Persons persons = {personsToShow}/>
       
     </div>
   )

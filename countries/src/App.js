@@ -1,18 +1,45 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 
+const Weather = ({country}) => {
+  const [icon, setIcon] = useState('')
+  const [wind, setWind] = useState(0)
+  const [temp, setTemp] = useState(273)
+  const key = '94dff518380daa980b3fb883dcb21f43'
+  useEffect(() => {
+    axios
+    .get(`https://api.openweathermap.org/data/2.5/weather?lat=${country.latlng[0]}&lon=${country.latlng[1]}&appid=${key}`)
+    .then(response => {
+      console.log(response.data)
+      setIcon(response.data.weather[0].icon)
+      setWind(response.data.wind.speed)
+      setTemp(response.data.main.temp)
+    })
+  },[])
+  return(
+    <div>
+      <h1>Weather in {country.name.common}</h1>
+      <p>temperature is {Math.floor((temp - 273)*10)/10} Celcius</p>
+      <img src = {`http://openweathermap.org/img/wn/${icon}@2x.png`}/>
+      <p>wind: {wind} m/s</p>
+    </div>
+  )
+}
 
 const Country = ({country}) => {
-  return(<div>
-    <h1>{country.name.common}</h1>
-    <p>capital: {country.capital}</p>
-    <p>area: {country.area} km^2</p>
-    <strong>languages:</strong>
-    <ul>
-      {Object.values(country.languages).map(lan => <li key = {lan}>{lan}</li>)}
-    </ul>
-    <img src={country.flags.png}></img>
-  </div>)
+  return(
+    <div>
+      <h1>{country.name.common}</h1>
+      <p>capital: {country.capital}</p>
+      <p>area: {country.area} km^2</p>
+      <strong>languages:</strong>
+      <ul>
+        {Object.values(country.languages).map(lan => <li key = {lan}>{lan}</li>)}
+      </ul>
+      <img src={country.flags.png}/>
+      <Weather country = {country}/>
+    </div>
+  )
 }
 
 const CountryListRow = ({country}) => {

@@ -15,7 +15,46 @@ const Country = ({country}) => {
   </div>)
 }
 
+const CountryListRow = ({country}) => {
+
+  const [show, setShow] = useState(false)
+
+  const click = () => setShow(!show)
+
+  if(show){
+    return (
+    <>
+      <div>
+          {country.name.common + ' '} 
+          <button onClick={click}> view </button>
+      </div>
+      <Country country = {country}/>
+    </>
+    )
+  }else{
+    return(
+      <div>
+          {country.name.common + ' '}
+          <button onClick={click}> view </button>
+      </div>
+    )
+  }
+
+  
+}
+
 const CountryList = ({countries}) => {
+  
+  return(
+    <div>
+      {countries.map(country => <CountryListRow key = {country.name.common} country = {country}/> )}
+       
+    </div>
+  )
+      
+}
+
+const Content = ({countries}) => {
   if (countries.length > 10){
     return (
       <p>Too many matches, specify another filter</p>
@@ -33,7 +72,7 @@ const CountryList = ({countries}) => {
   }else{
     return (
     <>
-      {countries.map(country => <p key = {country.name.common}>{country.name.common}</p>)}
+      <CountryList countries={countries} />
     </>
     )
   }
@@ -65,7 +104,7 @@ function App() {
     <>
     country: <input value = {search} onChange = {(event => {setSearch(event.target.value)})}/>
     <h1>Country List</h1>
-    <CountryList countries = {countriesToShow}/>
+    <Content countries = {countriesToShow}/>
     </>
   );
 }

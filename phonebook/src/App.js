@@ -65,7 +65,7 @@ const App = () => {
 
   const insertNew = (event) => {
     event.preventDefault()
-    if(persons.filter(person => person.name === newName).length === 0 && persons.filter(person => person.number === newNumber).length === 0){
+    if(persons.filter(person => person.name === newName).length === 0){
       const newObj = {
         name: newName,
         number: newNumber
@@ -77,13 +77,21 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
-      
-    }else if(persons.filter(person => person.name === newName).length === 0){
-      alert(`${newNumber} is already added`)
-    }else if(persons.filter(person => person.number === newNumber).length === 0){
-      alert(`${newName} is already added`)
     }else{
-      alert(`${newName} and ${newNumber} are already added`)
+      if (window.confirm(`Do you really want to change ${newName}'s number?`)) {
+        const newObj = {
+          name: newName,
+          number: newNumber
+        }
+        const id = persons.find(per => per.name === newName).id
+        personService
+          .update(id, newObj)
+          .then(() => {
+            setPersons(persons.map(per => per.id !== id ? per : newObj))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
     }
     
   }

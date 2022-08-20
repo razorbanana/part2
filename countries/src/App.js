@@ -18,7 +18,7 @@ const Weather = ({country}) => {
   },[])
   return(
     <div>
-      <h1>Weather in {country.name.common}</h1>
+      <h1>Weather in {country.capital}</h1>
       <p>temperature is {Math.floor((temp - 273)*10)/10} Celcius</p>
       <img src = {`http://openweathermap.org/img/wn/${icon}@2x.png`}/>
       <p>wind: {wind} m/s</p>
@@ -66,8 +66,6 @@ const CountryListRow = ({country}) => {
       </div>
     )
   }
-
-  
 }
 
 const CountryList = ({countries}) => {

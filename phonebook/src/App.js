@@ -25,10 +25,26 @@ const PersonForm = ({insertNew, newName, handleNameChange, newNumber, handleNumb
   )
 }
 
-const Persons = ({persons}) => {
+const Person = ({person, persons, setPersons}) => {
+  const deletePerson = () => {
+    if (window.confirm(`Do you really want to delete ${person.name}'s number?`)) {
+      personService
+        .del(person.id)
+        .then(() => setPersons(persons.filter(per => per.id !== person.id)))
+    }
+  }
   return (
     <>
-      {persons.map(person => <p key = {person.name}>{person.name}: {person.number}</p>)}
+      {person.name}: {person.number + ' '}
+      <button onClick = {deletePerson}>delete</button><br/>
+    </>
+  )
+}
+
+const Persons = ({persons, setPersons}) => {
+  return (
+    <>
+      {persons.map(person => <Person key = {person.name} person ={person} persons={persons} setPersons={setPersons}/>)}
     </>
   )
 }
@@ -96,7 +112,7 @@ const App = () => {
       <PersonForm insertNew ={insertNew} newName = {newName} handleNameChange = {handleNameChange} 
       newNumber={newNumber} handleNumberChange = {handleNumberChange}/>
       <h2>Numbers</h2>
-      <Persons persons = {personsToShow}/>
+      <Persons persons = {personsToShow} setPersons={setPersons}/>
     </div>
   )
 }

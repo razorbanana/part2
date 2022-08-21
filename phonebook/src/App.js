@@ -24,6 +24,29 @@ const GoodNotification = ({ message }) => {
   )
 }
 
+const BadNotification = ({ message }) => {
+
+  const style = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div style = {style}>
+      {message}
+    </div>
+  )
+}
+
 const Filter = ({filter, onChange}) => {
   return (
     <div>
@@ -121,6 +144,13 @@ const App = () => {
             setNewNumber('')
             setTimeout(() => {setGood(null)},2500)
           })
+          .catch(() => {
+            setPersons(persons.filter(per => per.id !== id))
+            setBad(`${newName}'s number has been already removed from server`)
+            setNewName('')
+            setNewNumber('')
+            setTimeout(() => {setBad(null)},2500)
+          })
       }
     }
     
@@ -146,6 +176,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <GoodNotification message={good}/>
+      <BadNotification message={bad}/>
       <Filter filter = {filter} onChange = {handleFilterChange}/>
       <h2>add a new</h2>
       <PersonForm insertNew ={insertNew} newName = {newName} handleNameChange = {handleNameChange} 

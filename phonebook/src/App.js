@@ -1,6 +1,29 @@
 import { useState, useEffect } from 'react'
 import personService from './services/phonebook'
 
+const GoodNotification = ({ message }) => {
+
+  const style = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div style = {style}>
+      {message}
+    </div>
+  )
+}
+
 const Filter = ({filter, onChange}) => {
   return (
     <div>
@@ -54,6 +77,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [good, setGood] = useState(null)
+  const [bad, setBad] = useState(null)
 
   useEffect(() => {
     personService
@@ -74,22 +99,27 @@ const App = () => {
       .create(newObj)
       .then(initialNotes => {
         setPersons(persons.concat(initialNotes))
+        setGood(`${newName}'s number is added`)
         setNewName('')
         setNewNumber('')
+        setTimeout(() => {setGood(null)},2500)
       })
     }else{
       if (window.confirm(`Do you really want to change ${newName}'s number?`)) {
+        const id = persons.find(per => per.name === newName).id
         const newObj = {
           name: newName,
-          number: newNumber
+          number: newNumber,
+          id: id
         }
-        const id = persons.find(per => per.name === newName).id
         personService
           .update(id, newObj)
           .then(() => {
             setPersons(persons.map(per => per.id !== id ? per : newObj))
+            setGood(`${newName}'s number is updated`)
             setNewName('')
             setNewNumber('')
+            setTimeout(() => {setGood(null)},2500)
           })
       }
     }
@@ -115,6 +145,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <GoodNotification message={good}/>
       <Filter filter = {filter} onChange = {handleFilterChange}/>
       <h2>add a new</h2>
       <PersonForm insertNew ={insertNew} newName = {newName} handleNameChange = {handleNameChange} 
